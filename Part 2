@@ -12,3 +12,16 @@ print(breast_cancer_wisconsin_diagnostic.metadata)
   
 # variable information 
 print(breast_cancer_wisconsin_diagnostic.variables) 
+
+x = data[:, 0]
+y = data[;, 1]
+
+split_ratio = 0.8
+split_index = int(len(x)* split_ratio)
+x_train, x_test = x[:split_index], x[split_index:]
+y_train, y_test = y[:split_index], y[split_index:]
+
+#Add a column of 1 to the x for biased term
+x_train_bias = np.c_[np.ones(x_train.shape), x_train]
+x_test_bias = np.c_[np.ones(x_test.shape), x_test]
+#This will ensure that each coefficient in the model has an input to be multiplied against
