@@ -95,6 +95,8 @@ plt.ylabel('MSE')
 plt.legend()
 plt.title('MSE vs. Iteration (Training)')  
 
+#When plotting the functions, the batch gradient will converge faster and take a more direct route. It will not venture off the standard deviation.
+#This does not allow for different proxy points that the stochastic gradient finds. Although it may venture further off the path, it finds different points that a batch would not reach.
 
 # Calculate MSE on testing set for Batch and Stochastic GD
 mse_test_batch = calculate_mse(x_test_bias, y_test, w_batch)
@@ -124,3 +126,5 @@ plt.show()
 best_lr_index = np.argmin(mse_test_rates)
 best_lr = learning_rates[best_lr_index]
 print("Best Learning Rate:", best_lr)
+
+#The code above will give the best learning rate from the given options.
