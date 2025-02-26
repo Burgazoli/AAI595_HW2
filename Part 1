@@ -72,4 +72,55 @@ learning_rate_batch = 0.001
 num_iterations_batch = 1000
 w_batch, mse_history_batch = batch_gradient_descent(x_train_bias, y_train, learning_rate_batch, num_iterations_batch)
 
-  
+plt.scatter(X, y, label='Data')
+plt.xlabel('X')
+plt.ylabel('Y')
+
+# Plot the linear regression lines
+plt.plot(x, x_train_bias.dot(w_normal), label='Normal Equation', linestyle='--')
+plt.plot(x, x_train_bias.dot(w_batch), label='Batch GD', linestyle='--')
+plt.plot(x, x_train_bias.dot(w_stochastic), label='Stochastic GD', linestyle='--')
+
+plt.legend()
+plt.title('Linear Regression')
+plt.show()
+
+# Plot MSE vs. iteration for Batch and Stochastic GD on training and testing sets
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.plot(range(num_iterations_batch), mse_history_batch, label='Batch GD (Training)')
+plt.plot(range(num_iterations_stochastic), mse_history_stochastic, label='Stochastic GD (Training)')
+plt.xlabel('Iteration')
+plt.ylabel('MSE')
+plt.legend()
+plt.title('MSE vs. Iteration (Training)')  
+
+
+# Calculate MSE on testing set for Batch and Stochastic GD
+mse_test_batch = calculate_mse(x_test_bias, y_test, w_batch)
+mse_test_stochastic = calculate_mse(x_test_bias, y_test, w_stochastic)
+
+# Print MSE on testing set
+print("MSE on Testing Set (Batch GD):", mse_test_batch)
+print("MSE on Testing Set (Stochastic GD):", mse_test_stochastic)
+
+# Plot MSE vs. learning rate for Stochastic GD
+learning_rates = [0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01]
+mse_test_rates = []
+
+for lr in learning_rates:
+    _, mse_history = stochastic_gradient_descent(X_train_bias, y_train, lr, num_iterations_stochastic)
+    mse_test = calculate_mse(X_test_bias, y_test, w_stochastic)
+    mse_test_rates.append(mse_test)
+
+plt.subplot(1, 2, 2)
+plt.plot(learning_rates, mse_test_rates, marker='o', linestyle='-')
+plt.xlabel('Learning Rate')
+plt.ylabel('MSE (Testing)')
+plt.title('MSE vs. Learning Rate (Stochastic GD)')
+plt.show()
+
+# Determine the best learning rate
+best_lr_index = np.argmin(mse_test_rates)
+best_lr = learning_rates[best_lr_index]
+print("Best Learning Rate:", best_lr)
