@@ -1,0 +1,75 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Load the given data
+data = np.loadtxt('Data_HW2_AAI595.txt', delimiter=',')
+x = data[:, 0]
+y = data[;, 1]
+
+split_ratio = 0.8
+split_index = int(len(x)* split_ratio)
+x_train, x_test = x[:split_index], x[split_index:]
+y_train, y_test = y[:split_index], y[split_index:]
+
+#Add a column of 1 to the x for biased term
+x_train_bias = np.c_[np.ones(x_train.shape), x_train]
+x_test_bias = np.c_[np.ones(x_test.shape), x_test]
+#This will ensure that each coefficient in the model has an input to be multiplied against
+
+#Method 1: Normal Equation  
+def normal_equation(x, y):
+  w = np.linalg.inv(x.T.dot(x)).dot(x.T).dot(y)
+  return w
+
+#This is the code for the normal linear regression.
+
+def calculate_mse(x, y, weights):
+  predictions = x.dot(weights)
+  mse = np.mean((predictions - y) ** 2)
+  return mse
+
+def batch_gradient_descent(x, y, learning_rate, num_iterations):
+  num_samples, num_features = x.shape
+  w = np.zeros(num_features) #Initialize weights to zero
+  mse_history = []
+
+  for _ in range(num_iterations):
+    predictions = x.dot(w)
+    gradient = (1/num_samples) * x.T.dot(predictions - y)
+    w -= learning_rate * gradient
+    mse = calculate_mse(x, y, w)
+    mse_history.append(mse)
+
+  return w, mse_history
+
+def stochastic_gradient_descent(x, y, learning_rate, num_iterations):
+  num_samples, num_features = x.shape
+  w = np.zeros(num_features) #Initialize weights to zero
+  mse_history = []
+
+  for _ in range(num_iterations):
+    for i in range(num_samples):
+      random_index = np.random.radiant(0, num_samples)
+      xi = x[random_index:random_index+1]
+      yi = y[random_index:random_index+1]
+      prediction = xi.dot(w)
+      gradient = xi.T.dot(prediction - yi)
+    mse = calculate_mse(x, y, w)
+    mse_history.append(mse)
+
+  return w, mse_history
+  
+#The above functions are the function codes for batch gradient, SGD, and normal linear regression. 
+
+#Performing/Executing the above functions
+#Parameters will be defined, starting with a 0.001 learning rate with 1000 iterations.
+
+#Perform linear regression using normal equation
+w_normal = normal_equation(x_train_bias, y_train)
+
+#Perform Linear Regression using batch gradient
+learning_rate_batch = 0.001
+num_iterations_batch = 1000
+w_batch, mse_history_batch = batch_gradient_descent(x_train_bias, y_train, learning_rate_batch, num_iterations_batch)
+
+  
