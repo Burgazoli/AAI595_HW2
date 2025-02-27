@@ -25,4 +25,27 @@ y_train, y_test = y[:split_index], y[split_index:]
 x_train_bias = np.c_[np.ones(x_train.shape), x_train]
 x_test_bias = np.c_[np.ones(x_test.shape), x_test]
 #This will ensure that each coefficient in the model has an input to be multiplied against
-https://stackoverflow.com/questions/45622602/how-to-save-jupyter-notebooks-from-github
+
+import pandas as pd 
+from sklearn.datasets import load_iris from sklearn.linear_model import LogisticRegression 
+from sklearn.model_selection import GridSearchCV 
+from sklearn.model_selection import train_test_split 
+# Load dataset (for example, the Iris dataset) 
+data = load_iris() 
+X = data.data 
+y = (data.target == 0).astype(int) 
+# Binary classification (class 0 vs. others) 
+# Define the logistic regression model 
+log_reg = LogisticRegression(solver='liblinear') 
+
+# Define a range of lambda values (regularization strength) 
+# In scikit-learn, the parameter 'C' is the inverse of lambda (C = 1/lambda) 
+param_grid = {'C': np.logspace(-4, 4, 10)} 
+# Set up GridSearchCV to find the optimal C (and thus lambda) 
+grid_search = GridSearchCV(log_reg, param_grid, cv=5, scoring='accuracy') 
+grid_search.fit(X_train, y_train) 
+
+# Print the best parameter and the best score optimal_C = grid_search.best_params_['C'] optimal_lambda = 1 / optimal_C best_score = grid_search.best_score_ 
+print(f"Optimal C (inverse of lambda): {optimal_C}") 
+print(f"Optimal lambda: {optimal_lambda}") 
+print(f"Best cross-validation score: {best_score}")
